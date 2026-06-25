@@ -6,7 +6,7 @@ load_dotenv()
 
 API_KEY = os.getenv("NEWS_API_KEY")
 TICKER = "AAPL"
-COMPANY_NAME = "Apple"
+COMPANY_NAME = '"Apple Inc" OR "Apple stock" OR AAPL'
 
 def fetch_headlines(query, api_key):
     url = "https://newsapi.org/v2/everything"
