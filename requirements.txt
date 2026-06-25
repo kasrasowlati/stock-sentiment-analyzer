@@ -1,0 +1,5 @@
+pandas
+vaderSentiment
+yfinance
+matplotlib
+requests
