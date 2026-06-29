@@ -2,7 +2,8 @@ import requests
 import os
 from dotenv import load_dotenv
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
-
+import yfinance as yf
+from datetime import datetime, timedelta
 load_dotenv()
 
 API_KEY = os.getenv("NEWS_API_KEY")
@@ -22,6 +23,11 @@ def fetch_headlines(query, api_key):
     response.raise_for_status()
     return response.json()
 
+def get_price_data(ticker, days_back=30):
+    end = datetime.now()
+    start = end - timedelta(days=days_back)
+    data = yf.download(ticker, start=start, end=end)
+    return data
 
 if __name__ == "__main__":
     analyzer = SentimentIntensityAnalyzer()
@@ -33,3 +39,6 @@ if __name__ == "__main__":
         score = analyzer.polarity_scores(title)
         compound = score['compound']
         print(f"[{compound:+.2f}] {title}")
+        print("\n--- Price Data ---")
+        prices = get_price_data(TICKER)
+        print(prices.tail())
