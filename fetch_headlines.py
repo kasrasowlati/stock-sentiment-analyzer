@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 import yfinance as yf
 from datetime import datetime, timedelta
+import matplotlib.pyplot as plt
 load_dotenv()
 
 API_KEY = os.getenv("NEWS_API_KEY")
@@ -67,3 +68,21 @@ if __name__ == "__main__":
     merged = pd.merge_asof(daily_sentiment, prices_reset, on="date", direction="backward")
     print("\n--- Merged Sentiment + Price ---")
     print(merged[["date", "compound", "Close"]])
+
+    fig, ax1 = plt.subplots(figsize=(10, 5))
+
+    ax1.set_xlabel("Date")
+    ax1.set_ylabel("Sentiment (compound)", color="tab:blue")
+    ax1.plot(merged["date"], merged["compound"], color="tab:blue", marker="o", label="Sentiment")
+    ax1.tick_params(axis="y", labelcolor="tab:blue")
+
+    ax2 = ax1.twinx()
+    ax2.set_ylabel("Close Price ($)", color="tab:green")
+    ax2.plot(merged["date"], merged["Close"], color="tab:green", marker="s", label="Close Price")
+    ax2.tick_params(axis="y", labelcolor="tab:green")
+
+    plt.title(f"{TICKER} Sentiment vs. Closing Price")
+    fig.tight_layout()
+    plt.savefig("sentiment_vs_price.png")
+    print("\nChart saved as sentiment_vs_price.png")
+    plt.show()
