@@ -8,8 +8,7 @@ import matplotlib.pyplot as plt
 load_dotenv()
 
 API_KEY = os.getenv("NEWS_API_KEY")
-TICKER = "AAPL"
-COMPANY_NAME = '"Apple Inc" OR "Apple stock" OR AAPL'
+
 
 def fetch_headlines(query, api_key):
     url = "https://newsapi.org/v2/everything"
@@ -18,7 +17,7 @@ def fetch_headlines(query, api_key):
         "apiKey": api_key,
         "language": "en",
         "sortBy": "publishedAt",
-        "pageSize": 20
+        "pageSize": 100
     }
     response = requests.get(url, params=params)
     response.raise_for_status()
@@ -32,12 +31,14 @@ def get_price_data(ticker, days_back=60):
 
 if __name__ == "__main__":
     analyzer = SentimentIntensityAnalyzer()
+    TICKER = input("Enter stock ticker (e.g. AAPL, NVDA, TSLA): ").upper()
+    COMPANY_NAME = input("Enter company name for news search (e.g. Apple, Nvidia): ")
     data = fetch_headlines(COMPANY_NAME, API_KEY)
     articles = data.get("articles", [])
     print(f"Found {len(articles)} articles for {COMPANY_NAME}")
 
     sentiment_records = []
-    for article in articles[:10]:
+    for article in articles:
         title = article['title']
         published = article['publishedAt'][:10]
         score = analyzer.polarity_scores(title)
