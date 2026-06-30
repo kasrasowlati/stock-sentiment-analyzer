@@ -24,7 +24,7 @@ def fetch_headlines(query, api_key):
     response.raise_for_status()
     return response.json()
 
-def get_price_data(ticker, days_back=30):
+def get_price_data(ticker, days_back=60):
     end = datetime.now()
     start = end - timedelta(days=days_back)
     data = yf.download(ticker, start=start, end=end)
